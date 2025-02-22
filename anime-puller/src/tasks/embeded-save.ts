@@ -17,13 +17,13 @@ export async function start(consumer: Consumer) {
       console.log(`✅ Task Received:`, task.title);
       console.log('topic', topic)
 
-      const { images, url, producers, ...data  } = task
-      const embeddedData = await generateEmbedding(JSON.stringify(data))
+      const { images, url, producers, synopsis  } = task
+      const embeddedData = await generateEmbedding(JSON.stringify(synopsis))
 
       await db?.collection('anime_list')
         .insertOne({
           ...task,
-          embedding: embeddedData.embedding,
+          synopsis_embedding: embeddedData.embedding,
         }).catch(console.error)
 
       console.log('🍀 Write success')

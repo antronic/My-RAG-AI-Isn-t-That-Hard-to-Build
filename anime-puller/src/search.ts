@@ -4,8 +4,8 @@ import { generateEmbedding } from './services/ollama'
 
 config()
 
-async function main() {
-  const input = process.argv[2]
+export async function main(search?: string) {
+  const input = search || process.argv[2]
   console.log('Converting...', input)
 
   const inputEmbedding = await generateEmbedding(input)
@@ -31,10 +31,20 @@ async function main() {
           synopsis_embedding: 0,
         },
       },
+      {
+        $match: {
+          rating: {
+            $not: /^R/i,
+          }
+        }
+      },
     ]).toArray()
 
-  console.log(results?.map(r => r.title))
+  console.log(results?.map(r => ({ title: r.title, rating: r.rating})))
+  // console.log(results)
   await client?.close()
+
+  return results
 }
 
-main()
+// main()
