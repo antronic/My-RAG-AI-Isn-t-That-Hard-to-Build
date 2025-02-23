@@ -1,6 +1,6 @@
 import { config } from 'dotenv'
-import { producer } from './config/kafka'
-import * as GetAnime from './tasks/get-anime'
+import { producer } from '../config/kafka'
+import * as GetAnime from '../tasks/get-anime'
 
 config()
 

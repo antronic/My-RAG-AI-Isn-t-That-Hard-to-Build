@@ -1,7 +1,7 @@
 import { config } from 'dotenv'
-import { consumer } from './config/kafka'
-import * as EmbededSave from './tasks/embeded-save'
-import { connectDB } from './config/mongo'
+import { consumer } from '../config/kafka'
+import * as EmbededSave from '../tasks/embeded-save'
+import { connectDB } from '../config/mongo'
 
 config()
 

@@ -1,11 +1,17 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { node } from '@elysiajs/node'
 
 import { main as search } from './search'
 import cors from '@elysiajs/cors'
+import { chatStore } from './chat/store'
+import { generateReponse } from './services/ollama'
+import Stream from '@elysiajs/stream'
+import ollama from 'ollama'
 
 // Server configuration
 const PORT = process.env.PORT || 9009
+
+chatStore.createSession('1')
 
 new Elysia({ adapter: node() })
     // Search endpoint: GET /search?q=<search term>
@@ -16,6 +22,20 @@ new Elysia({ adapter: node() })
         // Perform vector similarity search and return matches
         const result = await search(input) as any[]
 				return result
+    })
+
+		.post('/generate', async function *({ body }) {
+      const prompt = body!.prompt as string
+
+      const stream = await generateReponse(prompt)
+
+      for await (const chunk of stream) {
+        yield chunk.response
+      }
+    }, {
+      body: t.Object({
+        prompt: t.String(),
+      })
     })
 
 		// Enable CORS

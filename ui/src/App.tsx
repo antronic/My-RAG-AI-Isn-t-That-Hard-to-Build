@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import axios from 'axios'
+import ChatPage from './Chat'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +26,10 @@ function App() {
 
   const onChange = (e: any) => {
     setSearchQuery(e.target.value)
+  }
+
+  if (window.location.pathname === '/chat') {
+    return <ChatPage/>
   }
 
   return (

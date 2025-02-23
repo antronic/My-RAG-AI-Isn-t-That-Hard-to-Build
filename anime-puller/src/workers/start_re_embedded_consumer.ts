@@ -1,6 +1,6 @@
-import { consumer } from './config/kafka'
-import { connectDB } from './config/mongo'
-import { getData, updateData } from './tasks/manage_data'
+import { consumer } from '../config/kafka'
+import { connectDB } from '../config/mongo'
+import { getData, updateData } from '../tasks/manage_data'
 
 const KAFKA_TOPIC = 'anime-re-embed-topic'
 

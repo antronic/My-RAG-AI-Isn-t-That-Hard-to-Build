@@ -10,8 +10,6 @@ export async function main(search?: string) {
   console.log('Converting...', input)
 
   const inputEmbedding = await generateEmbedding(input)
-
-  // console.log('vector...', inputEmbedding.embedding)
   console.log('Searching...', input)
 
   const results = await db?.collection('anime_list')
@@ -40,7 +38,7 @@ export async function main(search?: string) {
       },
     ]).toArray()
 
-  console.log(results?.map(r => ({ title: r.title, rating: r.rating})))
+  console.log(results?.map(r => ({ title: r.title, rating: r.rating, url: r.url })))
 
   // await client?.close()
 
