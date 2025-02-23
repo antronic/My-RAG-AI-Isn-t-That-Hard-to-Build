@@ -5,15 +5,17 @@ import { main as search } from './search'
 import cors from '@elysiajs/cors'
 import { chatStore } from './chat/store'
 import { generateReponse } from './services/ollama'
-import Stream from '@elysiajs/stream'
-import ollama from 'ollama'
+import { ChatMessage } from './chat/types'
 
 // Server configuration
 const PORT = process.env.PORT || 9009
 
 chatStore.createSession('1')
 
-new Elysia({ adapter: node() })
+const app = new Elysia({ adapter: node() })
+  // .guard({
+  //   parse: 'json'
+  // })
     // Search endpoint: GET /search?q=<search term>
     // Returns an array of anime matches based on vector similarity
     .get('/search', async (req) => {
@@ -24,10 +26,45 @@ new Elysia({ adapter: node() })
 				return result
     })
 
+    .get('/chat', ({ query }) => {
+      let sessionId = query.sessionId as string
+
+      if (!sessionId) {
+        sessionId = chatStore.generateSessionId()
+        chatStore.createSession(sessionId)
+      }
+
+      chatStore.getSession(sessionId)
+      return { sessionId, messages: chatStore.getMessages(sessionId) }
+    })
+
+    .post('/chat', async function* ({ body }) {
+      const sessionId = body!.sessionId as string
+      const role = body!.role as ChatMessage['role']
+      const content = body!.content as string
+
+      const searchResult = await search(content)
+      chatStore.addMessage(sessionId, role, content)
+      // return chatStore.getSession(sessionId)
+
+      const streamResult = await generateReponse(content, searchResult!.join('\n'))
+
+      for await (const chunk of streamResult) {
+        yield chunk.response
+      }
+    }
+    , {
+      body: t.Object({
+        sessionId: t.String(),
+        role: t.String(),
+        content: t.String(),
+      })
+    })
+
 		.post('/generate', async function *({ body }) {
       const prompt = body!.prompt as string
 
-      const stream = await generateReponse(prompt)
+      const stream = await generateReponse(prompt, '')
 
       for await (const chunk of stream) {
         yield chunk.response
@@ -47,3 +84,5 @@ new Elysia({ adapter: node() })
             `🦊 Elysia is running at ${hostname}:${port}`
         )
     })
+
+export type App = typeof app

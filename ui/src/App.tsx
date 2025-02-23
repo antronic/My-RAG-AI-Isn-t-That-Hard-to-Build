@@ -2,6 +2,12 @@ import { useState } from 'react'
 import './App.css'
 import axios from 'axios'
 import ChatPage from './Chat'
+import { treaty } from '@elysiajs/eden'
+import type { App } from '../../anime-puller/src/http'
+
+// @ts-expect-error
+export const app = treaty<App>('localhost:9009')
+
 
 function App() {
   const [count, setCount] = useState(0)

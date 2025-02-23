@@ -14,6 +14,10 @@ class ChatStore {
     })
   }
 
+  generateSessionId(): string {
+    return Math.random().toString(36).substring(2, 15)
+  }
+
   addMessage(sessionId: string, role: ChatMessage['role'], content: string): void {
     const session = this.sessions.get(sessionId)
     if (!session) {
