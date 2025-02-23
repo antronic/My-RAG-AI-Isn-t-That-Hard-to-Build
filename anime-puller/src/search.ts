@@ -4,6 +4,7 @@ import { generateEmbedding } from './services/ollama'
 
 config()
 
+connectDB()
 export async function main(search?: string) {
   const input = search || process.argv[2]
   console.log('Converting...', input)
@@ -11,7 +12,6 @@ export async function main(search?: string) {
   const inputEmbedding = await generateEmbedding(input)
 
   // console.log('vector...', inputEmbedding.embedding)
-  await connectDB()
   console.log('Searching...', input)
 
   const results = await db?.collection('anime_list')
@@ -41,8 +41,8 @@ export async function main(search?: string) {
     ]).toArray()
 
   console.log(results?.map(r => ({ title: r.title, rating: r.rating})))
-  // console.log(results)
-  await client?.close()
+
+  // await client?.close()
 
   return results
 }

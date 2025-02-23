@@ -17,19 +17,29 @@ function App() {
     setSearchResult(result.data)
   }
 
+  const onEnter = (e: any) => {
+    if (e.key === 'Enter') {
+      search(searchQuery)
+    }
+  }
+
+  const onChange = (e: any) => {
+    setSearchQuery(e.target.value)
+  }
+
   return (
     <>
       <div>
         <h1>This is a semantic search</h1>
 
-        <div className="mt-4">
-          <input onChange={(e) => setSearchQuery(e.target.value)} type="text" className="text-white border-2 border-slate-200 bg-transparent rounded-xl px-4 py-2" />
-          <button onClick={() => search(searchQuery)} className="rounded-xl px-4 py-2 ml-4 border-2 border-slate-600">Search</button>
+        <div className="mt-4 flex">
+          <input onKeyUp={onEnter} onChange={onChange} type="text" className="text-white border-2 border-slate-200 bg-transparent rounded-xl px-4 py-2 flex-1" />
+          <button onClick={() => search(searchQuery)} className="rounded-xl px-4 py-2 ml-2 border-2 border-slate-300">Search</button>
         </div>
 
         {
           searchResult.map((result) => (
-            <div>
+            <div className='mt-4 px-4 py-2 bg-black/10 rounded-lg' key={result.id}>
               <h2>{result.title}</h2>
               <p>{result.rating}</p>
             </div>

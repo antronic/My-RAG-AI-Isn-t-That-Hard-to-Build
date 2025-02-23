@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@elysiajs/cors": "^1.2.0",
     "@elysiajs/node": "^1.2.6",
     "@tutkli/jikan-ts": "^2.2.0",
     "@types/cors": "^2.8.17",

@@ -3,6 +3,7 @@
   "workspaces": {
     "": {
       "dependencies": {
+        "@elysiajs/cors": "^1.2.0",
         "@elysiajs/node": "^1.2.6",
         "@tutkli/jikan-ts": "^2.2.0",
         "@types/cors": "^2.8.17",
@@ -29,6 +30,8 @@
   },
   "packages": {
     "@cspotcode/source-map-support": ["@cspotcode/source-map-support@0.8.1", "", { "dependencies": { "@jridgewell/trace-mapping": "0.3.9" } }, "sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw=="],
+
+    "@elysiajs/cors": ["@elysiajs/cors@1.2.0", "", { "peerDependencies": { "elysia": ">= 1.2.0" } }, "sha512-qsJwDAg6WfdQRMfj6uSMcDPSpXvm/zQFeAX1uuJXhIgazH8itSfcDxcH9pMuXVRX1yQNi2pPwNQLJmAcw5mzvw=="],
 
     "@elysiajs/node": ["@elysiajs/node@1.2.6", "", { "dependencies": { "formidable": "^3.5.2", "ws": "^8.18.0" }, "peerDependencies": { "bufferutil": ">= 4.0.1", "elysia": ">= 1.2.7" }, "optionalPeers": ["bufferutil"] }, "sha512-qauTs0YNLvfSyqW8k8pDCazd3nPQtFOeDH/cSz1wBhAGn1HL1PQlywnK6V0+bOGemkKlxLIjhmvbHxGrNzZMSg=="],
 
