@@ -33,7 +33,7 @@ html, body {
 #root {
   width: 100%;
   /* height: 100vh; */
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 /* a {
@@ -88,18 +88,18 @@ p {
 }
 
 /* Apply bullet from tailwindcss */
-ol {
+.response-box ol {
   @apply list-decimal;
   margin: -1em 1em;
   padding: 0em;
 }
-ul {
+.response-box ul {
   @apply list-disc;
   margin: -2em 0;
   padding: 0em;
 }
 
-li {
+.response-box li {
   @apply font-medium;
   padding: 0;
   margin: -0em 0;
