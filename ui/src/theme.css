@@ -1,0 +1,52 @@
+@theme {
+  /* Karry */
+  --color-karry-50: #fcf6f0;
+  --color-karry-100: #f7e2d1;
+  --color-karry-200: #f2cfb6;
+  --color-karry-300: #e9ae88;
+  --color-karry-400: #df8458;
+  --color-karry-500: #d76538;
+  --color-karry-600: #c94f2d;
+  --color-karry-700: #a73c27;
+  --color-karry-800: #863226;
+  --color-karry-900: #6c2c22;
+  --color-karry-950: #3a1410;
+  /* Conifer */
+  --color-conifer-50: #f6fce9;
+  --color-conifer-100: #eaf9ce;
+  --color-conifer-200: #d6f3a3;
+  --color-conifer-300: #b9e86e;
+  --color-conifer-400: #a3dc4b;
+  --color-conifer-500: #7fc022;
+  --color-conifer-600: #619917;
+  --color-conifer-700: #4b7516;
+  --color-conifer-800: #3d5d17;
+  --color-conifer-900: #354f18;
+  --color-conifer-950: #192b08;
+  /* Old Lace */
+  --color-old-lace-50: #fdf8ef;
+  --color-old-lace-100: #fbf2e4;
+  --color-old-lace-200: #f3d8b5;
+  --color-old-lace-300: #ebbe86;
+  --color-old-lace-400: #e29955;
+  --color-old-lace-500: #dc7e33;
+  --color-old-lace-600: #cd6729;
+  --color-old-lace-700: #ab5023;
+  --color-old-lace-800: #884124;
+  --color-old-lace-900: #6e3720;
+  --color-old-lace-950: #3b1a0f;
+  /* Cerulean Blue */
+  --color-cerulean-blue-50: #f2f4fc;
+  --color-cerulean-blue-100: #e1e7f8;
+  --color-cerulean-blue-200: #cad4f3;
+  --color-cerulean-blue-300: #a5b8eb;
+  --color-cerulean-blue-400: #7a94e0;
+  --color-cerulean-blue-500: #5b72d6;
+  --color-cerulean-blue-600: #4151c8;
+  --color-cerulean-blue-700: #3d45b8;
+  --color-cerulean-blue-800: #363a97;
+  --color-cerulean-blue-900: #303578;
+  --color-cerulean-blue-950: #21234a;
+  /* Main */
+  --color-primary: var(--color-cerulean-blue-500);
+}

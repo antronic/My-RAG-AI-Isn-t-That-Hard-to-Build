@@ -23,7 +23,7 @@ export async function start(consumer: Consumer) {
       await db?.collection('anime_list')
         .insertOne({
           ...task,
-          synopsis_embedding: embeddedData.embedding,
+          synopsis_embedding: embeddedData,
         }).catch(console.error)
 
       console.log('🍀 Write success')

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+/*
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -45,4 +45,4 @@
 
 h2 {
   @apply text-2xl font-bold;
-}
+} */

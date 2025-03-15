@@ -1,6 +1,6 @@
-import { producer } from './config/kafka'
-import { connectDB } from './config/mongo'
-import { getData, updateData } from './tasks/manage_data'
+import { producer } from '../../config/kafka'
+import { connectDB } from '../../config/mongo'
+import { getData, updateData } from '../../tasks/manage_data'
 
 const KAFKA_TOPIC = 'anime-re-embed-topic'
 
@@ -10,15 +10,16 @@ async function main(start: string, end: string) {
   await connectDB()
 
   const createRoundRange = (start: number, end: number) => {
-    return Array.from({ length: end - start + 1 }, (_, i) => i + start)
+    return Array.from({ length: end - start }, (_, i) => i + start)
   }
 
   const rounds = createRoundRange(Number(start), Number(end))
 
   for (const round of rounds) {
-    console.log('Round:', round)
+    console.log('Round:', round, '...')
     // Get data
     const results = await getData(round)
+    console.log('results', results)
     if (results) {
       for (const result of results) {
         const _id = result._id

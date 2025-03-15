@@ -5,7 +5,7 @@ config()
 const BROKER_URL = process.env.BROKER_URL || 'localhost:9092'
 
 const kafka = new Kafka({
-  clientId: 'my-app',
+  clientId: 'my-app-01',
   brokers: [BROKER_URL]
 })
 

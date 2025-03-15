@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@azure/openai": "^2.0.0",
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/node": "^1.2.6",
     "@elysiajs/stream": "^1.1.0",
