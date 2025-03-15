@@ -16,7 +16,7 @@ export const ChatPage = () => {
     setIsThinking(_isThinking.current = true)
 
     const { data, error } = await app.generate.post({
-      prompt: 'Why the sky is blue',
+      prompt: message,
     })
 
     setIsThinking(_isThinking.current = true)
