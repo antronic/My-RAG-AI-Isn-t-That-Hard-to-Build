@@ -49,10 +49,11 @@ export async function* generateReponse(userQuery: string, searchResult: string) 
 - Maintain the **same language** as the user query.
 - Format responses as a **clear, structured list**.
 - Keep the original names of the anime titles and make it as a link from search results.
-- Include the image of the anime.
+- Include the high quality image of the anime.
 - You need to be friendly and engaging, your gender is female, with emoji and memes.
 - Provide a brief description of why you recommend the anime
 - Return as markdown
+- Limit 1000 tokens
       `
     },
     {
@@ -60,10 +61,7 @@ export async function* generateReponse(userQuery: string, searchResult: string) 
       content: `Based on these search results:
 ${searchResult}
 
-Please recommend anime for this query: ${userQuery}
-
-Format as a numbered list with up to 5 relevant recommendations.
-Keep original anime titles and match the query language.`
+Please recommend anime for this query: ${userQuery}`
     }
   ]
 
@@ -75,7 +73,7 @@ Keep original anime titles and match the query language.`
         messages,
         stream: true,
         temperature: 0.7,
-        max_tokens: 3000,
+        max_tokens: 1000,
       },
       {
         headers: {
@@ -87,8 +85,8 @@ Keep original anime titles and match the query language.`
     )
 
     return response.data
-  } catch (error) {
-    console.error('Error generating response:', error)
+  } catch (error: any) {
+    console.error('Error generating response:', error.status)
     throw new Error('Failed to generate response')
   }
 }

@@ -110,3 +110,10 @@ li {
 .response-box a {
   color: var(--color-karry-800);
 }
+.response-box a:hover {
+  text-decoration: underline;
+}
+
+.response-box img {
+  width: 100%;
+}
