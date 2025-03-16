@@ -6,14 +6,16 @@ const HomePage = () => {
         <p className="text-conifer-500 text-2xl">to Build</p>
       </div>
 
-      <ul className="text-2xl font-bold list-disc list-inside">
-        <li>
-          <a href="/generate">Generate</a>
-        </li>
-        <li>
-          <a href="/search">Search</a>
-        </li>
-      </ul>
+      <div className="text-2xl font-bold grid grid-cols-4 gap-4">
+        <a href="/generate" className="scale-100 col-start-2 active:scale-90 hover:scale-110 transition-all">
+          <img src="/images/kirino-ai-02-generate.png" alt="RAG" className="w-1/2 mx-auto rounded-lg my-2" />
+          <p className="">Generate</p>
+        </a>
+        <a href="/search" className="scale-100 active:scale-90 hover:scale-110 transition-all">
+          <img src="/images/kirino-ai-02-search.png" alt="RAG" className="w-1/2 mx-auto rounded-lg my-2" />
+          <p className="">Search</p>
+        </a>
+      </div>
     </div>
   )
 }

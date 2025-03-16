@@ -113,6 +113,9 @@ export const GeneratePage = () => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 h-full flex flex-col justify-center">
+      <div className="">
+      <img src="/images/kirino-ai-02-mascot.png" alt="RAG" className="w-1/4 mx-auto rounded-full my-2 hover:animate-spin" />
+      </div>
       <div className="text-center mx-auto text-conifer-500">
         <h1 className="font-extra-bold">
           My RAG AI Can't Be This ... Easy

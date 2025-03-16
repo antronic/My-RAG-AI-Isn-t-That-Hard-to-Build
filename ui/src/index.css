@@ -109,11 +109,18 @@ p {
 
 .response-box a {
   color: var(--color-karry-800);
+  /* text-decoration: underline; */
+  display: inline-block;
+  background-color: var(--color-old-lace-50);
+  border: 2px solid var(--color-old-lace-700);
+  @apply rounded-md px-4 my-2;
 }
 .response-box a:hover {
   text-decoration: underline;
+  background-color: var(--color-old-lace-500);
 }
 
 .response-box img {
   width: 100%;
+  @apply rounded-md;
 }
