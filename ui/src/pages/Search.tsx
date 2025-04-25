@@ -1,15 +1,23 @@
 
 import { useState } from 'react'
 import axios from 'axios'
+import { AI_PROVIDER } from '../const/llm'
 
 function SearchPage() {
   const [searchResult, setSearchResult] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [provider, setProvider] = useState(AI_PROVIDER.OLLAMA)
 
   const search = async (q: string) => {
+    // Clean up the search query
+    setSearchResult([])
+    // Make sure query is not empty
+    if (!q.trim()) return
+    // Make sure to replace with your actual API endpoint
     const result = await axios.get('http://localhost:9009/search', {
       params: {
         q: q,
+        model: provider,
       }
     })
 
@@ -24,6 +32,10 @@ function SearchPage() {
 
   const onChange = (e: any) => {
     setSearchQuery(e.target.value)
+  }
+
+  const handleProviderChange = (newProvider: AI_PROVIDER) => {
+    setProvider(newProvider)
   }
 
   return (
@@ -59,7 +71,19 @@ function SearchPage() {
               disabled:bg-slate-300 disabled:cursor-not-allowed disabled:text-slate-400
             `}
             >Search</button>
-        </div>
+          </div>
+
+          <div className="mt-4">
+            <span>Provider:</span>
+            <select
+              className="ml-4 border-1 border-old-lace-700 bg-old-lace-200 rounded-lg px-2 py-1 text-old-lace-900 focus:outline-none focus:border-old-lace-500"
+              value={provider}
+              onChange={(e) => handleProviderChange(e.target.value as AI_PROVIDER)}
+            >
+              <option value={AI_PROVIDER.OPENAI}>{AI_PROVIDER.OPENAI}</option>
+              <option value={AI_PROVIDER.OLLAMA}>{AI_PROVIDER.OLLAMA}</option>
+            </select>
+          </div>
 
         {
           searchResult.map((result) => (

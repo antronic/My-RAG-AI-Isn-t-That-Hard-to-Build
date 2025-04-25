@@ -6,8 +6,8 @@ import { generateEmbedding as ollamaGenerateEmbedding } from './ollama'
 const TEXT_COMPLETION_AI = process.env.TEXT_COMPLETION_AI
 const TEXT_EMBEDDING_AI = process.env.TEXT_EMBEDDING_AI
 
-export async function generateEmbedding(text: string): Promise<number[]> {
-  switch (TEXT_EMBEDDING_AI) {
+export async function generateEmbedding(text: string, textEmbeddingAi?: string): Promise<number[]> {
+  switch (textEmbeddingAi || TEXT_EMBEDDING_AI) {
     case 'azure-openai':
       {
         const result = await azureOpenAiGenerateEmbedding(text);
@@ -20,6 +20,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
         return result.embedding
       }
     default:
+      console.error('Unsupported TEXT_EMBEDDING_AI provider');
       throw new Error('Unsupported TEXT_EMBEDDING_AI provider');
   }
 }

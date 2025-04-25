@@ -5,14 +5,14 @@ import { generateEmbedding, getCollectionName } from './services/llm'
 config()
 
 connectDB()
-export async function search(search?: string) {
+export async function search(search?: string, model?: string) {
   const input = search || process.argv[2]
-  console.log('Converting...', input)
+  console.log('Converting with model:', model, '...', input)
 
-  const inputEmbedding = await generateEmbedding(input)
+  const inputEmbedding = await generateEmbedding(input, model)
   console.log('Searching...', input)
 
-  const results = await db?.collection(getCollectionName())
+  const results = await db?.collection(getCollectionName(model))
     .aggregate([
       {
         $vectorSearch: {

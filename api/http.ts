@@ -22,8 +22,21 @@ const app = new Elysia()
   // Returns an array of anime matches based on vector similarity
   .get('/search', async (req) => {
       const input = req.query.q as string
+      let model = req.query.model || 'Ollama'
+
+      switch (model) {
+        case 'Ollama':
+          model = 'ollama';
+          break;
+        case 'Azure OpenAI':
+          model = 'azure-openai';
+          break;
+        default:
+          break;
+      }
+
       // Perform vector similarity search and return matches
-      const result = await search(input)
+      const result = await search(input, model)
       return result
   })
   //
@@ -112,7 +125,7 @@ const app = new Elysia()
     // Extract the prompt from the request body
     const prompt = body!.prompt as string
     // Perform a search based on the content
-    const searchResult = await search(prompt)
+    const searchResult = await search(prompt, 'azure-openai')
     const normalizedSearchResults = searchResult ? normalizedSearchResult(searchResult) : 'No result'
 
     console.log('Prompt:', prompt)
