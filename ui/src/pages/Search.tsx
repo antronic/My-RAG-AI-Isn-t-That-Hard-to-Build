@@ -63,9 +63,9 @@ function SearchPage() {
 
         {
           searchResult.map((result) => (
-            <div className='mt-4 px-4 py-2 bg-old-lace-200 rounded-lg' key={result.id}>
+            <div className='mt-4 px-4 py-2 bg-old-lace-200 rounded-lg fade-in-and-slide-up' key={result.id}>
               <h4>{result.title}</h4>
-              <img src={result.images.jpg.image_url} alt={result.title} />
+              <img src={result.image} alt={result.title} />
               <a href={result.url} target='_blank' rel='noreferrer' className="mt-4 inline-block bg-old-lace-400 text-conifer-500 text-white rounded-lg px-4 py-2">
                 Read More
               </a>

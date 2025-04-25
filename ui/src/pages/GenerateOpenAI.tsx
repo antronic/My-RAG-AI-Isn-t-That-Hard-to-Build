@@ -1,5 +1,5 @@
 import { app } from '../App'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Markdown from 'react-markdown'
 
 let first = false
@@ -9,8 +9,6 @@ export const GeneratePage = () => {
   const [prompt, setPrompt] = useState('')
   // State for the generated response
   const [message, setMessage] = useState('')
-  // State for thinking/loading status
-  const [thinkMessage, setThinkMessage] = useState('')
   // State for tracking thinking/loading status
   const [isThinking, setIsThinking] = useState(false)
   // State for tracking the typing status
@@ -19,22 +17,13 @@ export const GeneratePage = () => {
   // Refs to handle streaming updates without re-renders
   const _message = useRef("")
   const _isThinking = useRef(false)
-  const _thinkingTextDivRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    _thinkingTextDivRef.current?.scrollTo({
-      behavior: 'smooth',
-      top: _thinkingTextDivRef.current.scrollHeight,
-    })
-  }, [thinkMessage])
-
-  const generateOllama = async () => {
+  const generate = async () => {
     // Don't process empty prompts
     if (!prompt.trim()) return
 
     // Reset message and start thinking state
     setMessage('')
-    setThinkMessage('')
     _message.current = ''
     setIsThinking(_isThinking.current = true)
 
@@ -54,14 +43,15 @@ export const GeneratePage = () => {
           _message.current = _message.current + current
 
           if (_isThinking.current) {
-            if(_message.current.includes('</think>'))
+            if (_message.current.includes('</think>')) {
               setIsThinking(_isThinking.current = false)
-              setThinkMessage(prev => prev + current)
-            } else {
-              setMessage(prev => prev + current)
+            }
+          } else {
+            setMessage(prev => prev + current)
           }
         }
       }
+
       console.log('Generation successful:', message)
     } catch (error) {
       console.error('Generation failed:', error)
@@ -151,7 +141,7 @@ export const GeneratePage = () => {
         />
         {/* Button to generate response */}
         <button
-          onClick={generateOllama}
+          onClick={generateOpenAI}
           disabled={isThinking || !prompt.trim()}
           className={`
             bg-conifer-500 text-white w-full
@@ -164,7 +154,7 @@ export const GeneratePage = () => {
 
         {/* Thinking/loading animation */}
         {isThinking && (
-          <div className="w-full h-full bg-old-lace-800/50 backdrop-blur-xs absolute top-0 left-0 fade-in">
+          <div className="w-full h-full bg-old-lace-800/50 backdrop-blur-xs absolute top-0 left-0">
             <div className="flex h-full flex-col justify-center items-center animate-bounce">
               <p className="animate-pulse text-old-lace-500 text-4xl rounded-lg px-4 py-2 font-bold bg-old-lace-200">Thinking...</p>
             </div>
@@ -172,22 +162,10 @@ export const GeneratePage = () => {
         )}
       </div>
 
-      {/* Thinking/loading text */}
-      {
-        isThinking && thinkMessage !== '' && (
-          <div className="mt-8 mx-auto w-3/4 fade-in">
-            <p className="text-lg text-slate-500/50 mb-2">I'm thinking...</p>
-            <div ref={_thinkingTextDivRef} className="px-4 py-4 max-h-16 hover:max-h-36 transition-all text-slate-700/75 bg-slate-500/25 rounded-lg overflow-y-auto scroll-auto">
-              <Markdown>{thinkMessage}</Markdown>
-            </div>
-          </div>
-        )
-      }
-
       {/* Generated response */}
       {
         message && (
-          <div className="w-full mt-4 bg-old-lace-400 rounded-lg p-4 response-box fade-in-and-slide-up">
+          <div className="w-full mt-4 bg-old-lace-400 rounded-lg p-4 response-box">
             <p className="text-base mb-2 text-old-lace-200">Here's what I came up with:</p>
             <div className="whitespace-pre-wrap text-lg text-old-lace-50">
               <Markdown>

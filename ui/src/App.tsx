@@ -1,5 +1,5 @@
 import { treaty } from '@elysiajs/eden'
-// import './App.css'
+import './App.css'
 
 import type { App } from '../../api/http'
 import { RouterProvider } from 'react-router'

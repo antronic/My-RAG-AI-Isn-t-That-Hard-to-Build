@@ -1,9 +1,9 @@
 import { Elysia, t } from 'elysia'
 
-import { main as search } from '../tools/anime-puller/src/search'
+import { normalizedSearchResult, search } from '../tools/anime-puller/src/search'
 import cors from '@elysiajs/cors'
 import { chatStore } from '../tools/anime-puller/src/chat/store'
-import { generateReponse } from '../tools/anime-puller/src/services/ollama'
+import { generateReponse as generateReponseOllama } from '../tools/anime-puller/src/services/ollama'
 import { generateReponse as generateOpenAIReponse } from '../tools/anime-puller/src/services/azure-openai'
 import { ChatMessage } from '../tools/anime-puller/src/chat/types'
 import { config } from 'dotenv'
@@ -23,26 +23,26 @@ const app = new Elysia()
   .get('/search', async (req) => {
       const input = req.query.q as string
       // Perform vector similarity search and return matches
-      const result = await search(input) as string[]
-      return result.map(r => JSON.parse(r))
+      const result = await search(input)
+      return result
   })
   //
   // Chat endpoint: GET /chat?sessionId=<session id>
   // Returns the chat session with the given session id
-  .get('/chat', ({ query }) => {
-    // Extract the session id from the query parameters
-    let sessionId = query.sessionId as string
-    // If no session id is provided, generate a new session id and create a new session
-    if (!sessionId) {
-      // Generate a new session id
-      sessionId = chatStore.generateSessionId()
-      // Create a new chat session
-      chatStore.createSession(sessionId)
-    }
-    // Return the chat session
-    chatStore.getSession(sessionId)
-    return { sessionId, messages: chatStore.getMessages(sessionId) }
-  })
+  // .get('/chat', ({ query }) => {
+  //   // Extract the session id from the query parameters
+  //   let sessionId = query.sessionId as string
+  //   // If no session id is provided, generate a new session id and create a new session
+  //   if (!sessionId) {
+  //     // Generate a new session id
+  //     sessionId = chatStore.generateSessionId()
+  //     // Create a new chat session
+  //     chatStore.createSession(sessionId)
+  //   }
+  //   // Return the chat session
+  //   chatStore.getSession(sessionId)
+  //   return { sessionId, messages: chatStore.getMessages(sessionId) }
+  // })
   //
   // Chat endpoint: POST /chat
   // Adds a new message to the chat session
@@ -57,7 +57,7 @@ const app = new Elysia()
     chatStore.addMessage(sessionId, role, content)
     // return chatStore.getSession(sessionId)
     // Generate a response based on the search result
-    const streamResult = await generateReponse(content, searchResult!.join('\n'))
+    const streamResult = await generateReponseOllama(content, normalizedSearchResult(searchResult || []))
     // Yield each response chunk as it is received
     for await (const chunk of streamResult) {
       yield chunk.response
@@ -73,7 +73,42 @@ const app = new Elysia()
   //
   // Generate endpoint: POST /generate
   // Returns a generated response based on the input prompt
-  .post('/generate', async function *({ body }) {
+  .post('/generate_ollama', async function *({ body }) {
+    // Extract the prompt from the request body
+    const prompt = body!.prompt as string
+    // Perform a search based on the content
+    const searchResult = await search(prompt)
+    //
+    // Generate a response based on the prompt
+    // const stream = await generateOpenAIReponse(prompt, searchResult!.join('\n'))
+    // const stream = generateOpenAIReponse(prompt, searchResult!.join('\n'))
+    const normalizedSearchResults = searchResult ? normalizedSearchResult(searchResult) : 'No result'
+
+    console.log('Prompt:', prompt)
+    console.log('Search result:', normalizedSearchResults)
+
+    console.log('Generating...')
+    const stream = await generateReponseOllama(prompt, normalizedSearchResults)
+    console.log('Done')
+
+    // console.log((await stream.next()).value)
+    // Yield each response chunk as it is received
+    // for await (const chunk of stream) {
+    console.log('Response:')
+    for await (const chunk of stream) {
+      yield chunk.response
+      process.stdout.write(chunk.response.toString());
+    }
+  //   return stream
+  }, {
+    body: t.Object({
+      prompt: t.String(),
+    })
+  })
+   //
+  // Generate endpoint: POST /generate
+  // Returns a generated response based on the input prompt
+  .post('/generate_openai', async function *({ body }) {
     // Extract the prompt from the request body
     const prompt = body!.prompt as string
     // Perform a search based on the content

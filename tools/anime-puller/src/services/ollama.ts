@@ -1,6 +1,6 @@
-import ollama from 'ollama'
+import ollama, { AbortableAsyncIterator, EmbeddingsResponse, EmbedResponse, GenerateResponse } from 'ollama'
 
-export async function generateEmbedding(text: string) {
+export async function generateEmbedding(text: string): Promise<EmbeddingsResponse> {
   const response = await ollama.embeddings({
     model: 'nomic-embed-text',
     prompt: text,
@@ -10,16 +10,24 @@ export async function generateEmbedding(text: string) {
 }
 
 export function generateReponse(userQuery: string, searchResult: string) {
-  const prompt = `You are an AI assistant that helps users find the **top 5 anime** based on the **search results** and respect on the search ranking and the **user query**.
-
-**Response Guidelines:**
+  const prompt = `# Identity
+You are an anime recommendation assistant that provides recommendations in the same language as the user's query.
+# Instructions
+*Response Guidelines
+- Provide a **concise, relevant** list of 5 anime based on the search results.
 - NEED to Reponse in the same language as the user query
-- Provide a **concise, relevant** list of **up to 5 anime** based on the search results.
-- Prioritize the **most relevant** match first.
-- If no exact match is found, suggest the **closest relevant anime**.
+- Must **include the image of the anime** as img element.
+- Must prioritize the **most relevant** match first.
 - Maintain the **same language** as the user query.
-- Format responses as a **clear, structured list**.
-- Keep the original names of the anime titles.
+- Keep the original names of the anime titles
+- Provide a link from search results.
+- If no exact match is found, suggest the **closest relevant anime**.
+- You need to be friendly and engaging, your gender is female japanese idol, with emoji and memes.
+- Provide a brief description of why you recommend the anime
+- Return as markdown
+- If user asks out of scope question but still related to anime, ignore the search result and provide a response
+- The **first anime** should be the most relevant match. If no perfect match is found, suggest the closest alternatives.
+- **Ensure the response is in the same language as the user query**.
 ---
 **Search Results (from MongoDB Vector Search):**
 <START - Search Results>
@@ -29,22 +37,15 @@ ${searchResult}
 <START - User Query>
 ${userQuery}
 <END - User Query>
+`
 
-### **Instructions:**
-1. **Determine the language** of the user query.
-2. Generate a ranked list of up to **5 recommended anime** based on the **search results**.
-3. The **first anime** should be the most relevant match. If no perfect match is found, suggest the closest alternatives.
-4. **Ensure the response is in the same language as the user query**.`
-
-console.log('Prompt:', prompt)
-  //
-  // Generate a response based on the prompt
-  const response = ollama.generate({
+// console.log('Prompt:', prompt)
+const response = ollama.generate({
     model: 'deepseek-r1:14b',
     // model: 'phi4',
     stream: true,
     prompt,
   })
-
+  console.log('1')
   return response
 }

@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "@azure/identity": "^4.9.1",
+    "@azure/openai": "^2.0.0",
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/node": "^1.2.6",
     "@types/node": "^22.13.10",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "elysia": "^1.2.25",
+    "openai": "^4.96.0"
   }
 }

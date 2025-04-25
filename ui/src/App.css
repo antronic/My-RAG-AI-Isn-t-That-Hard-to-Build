@@ -46,3 +46,27 @@
 h2 {
   @apply text-2xl font-bold;
 } */
+
+.fade-in {
+  opacity: 0;
+  animation: fade-in 1s forwards;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-and-slide-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fade-in-and-slide-up 1s forwards;
+}
+
+@keyframes fade-in-and-slide-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

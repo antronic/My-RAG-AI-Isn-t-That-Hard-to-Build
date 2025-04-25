@@ -1,0 +1,36 @@
+import { config }  from 'dotenv'
+
+import { generateEmbedding as azureOpenAiGenerateEmbedding } from './azure-openai'
+import { generateEmbedding as ollamaGenerateEmbedding } from './ollama'
+
+const TEXT_COMPLETION_AI = process.env.TEXT_COMPLETION_AI
+const TEXT_EMBEDDING_AI = process.env.TEXT_EMBEDDING_AI
+
+export async function generateEmbedding(text: string): Promise<number[]> {
+  switch (TEXT_EMBEDDING_AI) {
+    case 'azure-openai':
+      {
+        const result = await azureOpenAiGenerateEmbedding(text);
+        return result.data[0].embedding
+      }
+    case 'ollama':
+      {
+        const result = await ollamaGenerateEmbedding(text);
+
+        return result.embedding
+      }
+    default:
+      throw new Error('Unsupported TEXT_EMBEDDING_AI provider');
+  }
+}
+
+export function getCollectionName(textEmbeddingAi?: string): string {
+  switch (textEmbeddingAi || TEXT_EMBEDDING_AI) {
+    case 'azure-openai':
+      return 'embedded_aoai_anime_list'
+    case 'ollama':
+      return 'embedded_anime_list'
+    default:
+      throw new Error('Unsupported TEXT_EMBEDDING_AI provider');
+  }
+}
