@@ -45,7 +45,10 @@ const response = ollama.generate({
     // model: 'phi4',
     stream: true,
     prompt,
+    options: {
+      temperature: 2 // 👈 Set temperature here!
+    }
   })
-  console.log('1')
+  console.log('Response generated')
   return response
 }

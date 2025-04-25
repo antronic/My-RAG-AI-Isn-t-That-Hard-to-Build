@@ -34,8 +34,7 @@ export async function search(search?: string) {
           title: 1,
           synopsis: 1,
           url: 1,
-          // images: 1,
-          // image: '$images.jpg.image_url',
+          images: 1,
           image: '$images.jpg.large_image_url',
           rating: 1,
         }
