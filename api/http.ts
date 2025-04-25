@@ -113,10 +113,13 @@ const app = new Elysia()
     const prompt = body!.prompt as string
     // Perform a search based on the content
     const searchResult = await search(prompt)
-    //
-    // Generate a response based on the prompt
-    // const stream = await generateOpenAIReponse(prompt, searchResult!.join('\n'))
-    const stream = generateOpenAIReponse(prompt, searchResult!.join('\n'))
+    const normalizedSearchResults = searchResult ? normalizedSearchResult(searchResult) : 'No result'
+
+    console.log('Prompt:', prompt)
+    console.log('Search result:', normalizedSearchResults)
+
+    console.log('Generating...')
+    const stream = generateOpenAIReponse(prompt, normalizedSearchResults)
 
     // console.log((await stream.next()).value)
     // Yield each response chunk as it is received

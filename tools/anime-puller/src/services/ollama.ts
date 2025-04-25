@@ -16,7 +16,7 @@ You are an anime recommendation assistant that provides recommendations in the s
 *Response Guidelines
 - Provide a **concise, relevant** list of 5 anime based on the search results.
 - NEED to Reponse in the same language as the user query
-- Must **include the image of the anime** as img element.
+- Must **include the image of the anime** as img markdown element.
 - Must prioritize the **most relevant** match first.
 - Maintain the **same language** as the user query.
 - Keep the original names of the anime titles
@@ -46,7 +46,8 @@ const response = ollama.generate({
     stream: true,
     prompt,
     options: {
-      temperature: 2 // 👈 Set temperature here!
+      temperature: 1, // 👈 Set temperature here!
+      num_predict: 100000,
     }
   })
   console.log('Response generated')

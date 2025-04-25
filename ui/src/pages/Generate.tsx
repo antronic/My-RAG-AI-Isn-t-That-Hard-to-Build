@@ -4,6 +4,11 @@ import Markdown from 'react-markdown'
 
 let first = false
 
+enum AI_PROVIDER {
+  OPENAI = 'Azure OpenAI',
+  OLLAMA = 'Ollama',
+}
+
 export const GeneratePage = () => {
   // State for the user input prompt
   const [prompt, setPrompt] = useState('')
@@ -15,6 +20,13 @@ export const GeneratePage = () => {
   const [isThinking, setIsThinking] = useState(false)
   // State for tracking the typing status
   const [isTyping, setIsTyping] = useState(false)
+
+  const [provider, setPrompter] = useState(AI_PROVIDER.OLLAMA)
+
+
+  const handleProviderChange = (newProvider: AI_PROVIDER) => {
+    setPrompter(newProvider)
+  }
 
   // Refs to handle streaming updates without re-renders
   const _message = useRef("")
@@ -121,6 +133,16 @@ export const GeneratePage = () => {
     }
   }
 
+  function generate() {
+    if (provider === AI_PROVIDER.OLLAMA) {
+      generateOllama()
+    } else if (provider === AI_PROVIDER.OPENAI) {
+      generateOpenAI()
+    } else {
+      alert('Provider not supported')
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 h-full flex flex-col justify-center">
       <div className="">
@@ -151,7 +173,7 @@ export const GeneratePage = () => {
         />
         {/* Button to generate response */}
         <button
-          onClick={generateOllama}
+          onClick={generate}
           disabled={isThinking || !prompt.trim()}
           className={`
             bg-conifer-500 text-white w-full
@@ -162,11 +184,27 @@ export const GeneratePage = () => {
           Generate
         </button>
 
+        <div className="mt-4">
+          <span>Provider:</span>
+          {/* Dropdown */}
+          <select
+            className="ml-4 border-1 border-old-lace-700 bg-old-lace-200 rounded-lg px-2 py-1 text-old-lace-900 focus:outline-none focus:border-old-lace-500"
+            value={provider}
+            onChange={(e) => handleProviderChange(e.target.value as AI_PROVIDER)}
+          >
+            <option value={AI_PROVIDER.OPENAI}>{AI_PROVIDER.OPENAI}</option>
+            <option value={AI_PROVIDER.OLLAMA}>{AI_PROVIDER.OLLAMA}</option>
+          </select>
+        </div>
+
         {/* Thinking/loading animation */}
         {isThinking && (
-          <div className="w-full h-full bg-old-lace-800/50 backdrop-blur-xs absolute top-0 left-0 fade-in">
+          <div className="w-full h-full bg-old-lace-800/50 backdrop-blur-xs absolute top-0 left-0 fade-in-and-scale rounded-xl">
             <div className="flex h-full flex-col justify-center items-center animate-bounce">
-              <p className="animate-pulse text-old-lace-500 text-4xl rounded-lg px-4 py-2 font-bold bg-old-lace-200">Thinking...</p>
+              <div className="animate-pulse text-old-lace-500 rounded-lg px-4 py-2 font-bold bg-old-lace-200">
+                <span className="block">{provider} is</span>
+                <span className="text-4xl">Thinking...</span>
+              </div>
             </div>
           </div>
         )}
