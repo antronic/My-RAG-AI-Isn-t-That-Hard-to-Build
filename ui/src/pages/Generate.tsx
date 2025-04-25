@@ -1,13 +1,7 @@
 import { app } from '../App'
 import { useEffect, useRef, useState } from 'react'
 import Markdown from 'react-markdown'
-
-let first = false
-
-enum AI_PROVIDER {
-  OPENAI = 'Azure OpenAI',
-  OLLAMA = 'Ollama',
-}
+import { AI_PROVIDER } from '../const/llm'
 
 export const GeneratePage = () => {
   // State for the user input prompt

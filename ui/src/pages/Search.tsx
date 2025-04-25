@@ -66,7 +66,8 @@ function SearchPage() {
             <div className='mt-4 px-4 py-2 bg-old-lace-200 rounded-lg fade-in-and-slide-up' key={result.id}>
               <h4>{result.title}</h4>
               <img src={result.image} alt={result.title} />
-              <a href={result.url} target='_blank' rel='noreferrer' className="mt-4 inline-block bg-old-lace-400 text-conifer-500 text-white rounded-lg px-4 py-2">
+              <p className="py-4">{result.synopsis}</p>
+              <a href={result.url} target='_blank' rel='noreferrer' className="my-4 inline-block bg-old-lace-400 hover:bg-old-lace-600 text-conifer-500 text-white rounded-lg px-4 py-2">
                 Read More
               </a>
             </div>
