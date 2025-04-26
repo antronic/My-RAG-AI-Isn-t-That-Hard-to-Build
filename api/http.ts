@@ -23,6 +23,7 @@ const app = new Elysia()
   .get('/search', async (req) => {
       const input = req.query.q as string
       let model = req.query.model || 'Ollama'
+      let safeSearch = req.query.safeSearch !== 'false'
 
       switch (model) {
         case 'Ollama':

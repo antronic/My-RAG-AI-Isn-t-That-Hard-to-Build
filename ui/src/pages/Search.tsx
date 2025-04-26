@@ -7,6 +7,7 @@ function SearchPage() {
   const [searchResult, setSearchResult] = useState<any[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [provider, setProvider] = useState(AI_PROVIDER.OLLAMA)
+  const [isSafeSearch, setSafeSearch] = useState(true)
 
   const search = async (q: string) => {
     // Clean up the search query
@@ -18,6 +19,7 @@ function SearchPage() {
       params: {
         q: q,
         model: provider,
+        safeSearch: isSafeSearch,
       }
     })
 
@@ -73,16 +75,23 @@ function SearchPage() {
             >Search</button>
           </div>
 
-          <div className="mt-4">
-            <span>Provider:</span>
-            <select
-              className="ml-4 border-1 border-old-lace-700 bg-old-lace-200 rounded-lg px-2 py-1 text-old-lace-900 focus:outline-none focus:border-old-lace-500"
-              value={provider}
-              onChange={(e) => handleProviderChange(e.target.value as AI_PROVIDER)}
-            >
-              <option value={AI_PROVIDER.OPENAI}>{AI_PROVIDER.OPENAI}</option>
-              <option value={AI_PROVIDER.OLLAMA}>{AI_PROVIDER.OLLAMA}</option>
-            </select>
+          <div className="mt-4 flex gap-x-4 items-center">
+            <div className="">
+              <span>Provider:</span>
+              <select
+                className="ml-4 border-1 border-old-lace-700 bg-old-lace-200 rounded-lg px-2 py-1 text-old-lace-900 focus:outline-none focus:border-old-lace-500"
+                value={provider}
+                onChange={(e) => handleProviderChange(e.target.value as AI_PROVIDER)}
+              >
+                <option value={AI_PROVIDER.OPENAI}>{AI_PROVIDER.OPENAI}</option>
+                <option value={AI_PROVIDER.OLLAMA}>{AI_PROVIDER.OLLAMA}</option>
+              </select>
+            </div>
+
+            <div className="">
+              <input type="checkbox" checked={isSafeSearch} onChange={() => setSafeSearch(!isSafeSearch)} />
+              <label className="ml-2">Safe Search</label>
+            </div>
           </div>
 
         {

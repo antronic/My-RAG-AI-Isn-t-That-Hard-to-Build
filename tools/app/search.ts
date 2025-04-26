@@ -42,7 +42,8 @@ export async function main(search?: string) {
             rating: {
               $nin: [
                 "R - 17+ (violence & profanity)",
-                "R+ - Mild Nudity"
+                "R+ - Mild Nudity",
+                "Rx - Hentai",
                 ],
             }
           }

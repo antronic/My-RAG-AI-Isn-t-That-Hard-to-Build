@@ -5,12 +5,31 @@ import { generateEmbedding, getCollectionName } from './services/llm'
 config()
 
 connectDB()
-export async function search(search?: string, model?: string) {
+
+type SearchOptions = {
+  safeSearch?: boolean
+}
+export async function search(search?: string, model?: string, options?: SearchOptions) {
+  const safeSearch = options?.safeSearch ?? true
   const input = search || process.argv[2]
   console.log('Converting with model:', model, '...', input)
 
   const inputEmbedding = await generateEmbedding(input, model)
   console.log('Searching...', input)
+
+  let filter = {}
+
+  if (safeSearch) {
+    filter = {
+      rating: {
+        $nin: [
+          "R - 17+ (violence & profanity)",
+          "R+ - Mild Nudity",
+          "Rx - Hentai",
+        ],
+      }
+    }
+  }
 
   const results = await db?.collection(getCollectionName(model))
     .aggregate([
@@ -22,14 +41,7 @@ export async function search(search?: string, model?: string) {
           numCandidates: 1000,
           limit: 500,
           // Filter out results with a rating 'R'
-          filter: {
-            rating: {
-              $nin: [
-                "R - 17+ (violence & profanity)",
-                "R+ - Mild Nudity"
-                ],
-            }
-          }
+          filter,
         },
       },
       {
