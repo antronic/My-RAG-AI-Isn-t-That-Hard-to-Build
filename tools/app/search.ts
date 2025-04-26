@@ -25,26 +25,28 @@ export async function main(search?: string) {
   //
   // Generate the embedding for the search query
   const inputEmbedding = await generateEmbedding(input)
+  console.log(inputEmbedding)
   //
   // Perform the vector search
   const results = await db?.collection(getCollectionName())
     .aggregate([
       {
         $vectorSearch: {
-          index: 'default',
+          index: 'synopsis_rating_filter',
           path: 'synopsis_embedding',
           queryVector: inputEmbedding,
-          numCandidates: 500,
-          limit: 100,
-        },
-      },
-      // Filter out results with a rating 'R'
-      {
-        $match: {
-          rating: {
-            $not: /^R/i,
+          numCandidates: 1000,
+          limit: 500,
+          // Filter out results with a rating 'R'
+          filter: {
+            rating: {
+              $nin: [
+                "R - 17+ (violence & profanity)",
+                "R+ - Mild Nudity"
+                ],
+            }
           }
-        }
+        },
       },
       {
         $project: {
