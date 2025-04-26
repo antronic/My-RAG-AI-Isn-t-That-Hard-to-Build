@@ -16,11 +16,20 @@ export async function search(search?: string, model?: string) {
     .aggregate([
       {
         $vectorSearch: {
-          index: 'default',
+          index: 'synopsis_rating_filter',
           path: 'synopsis_embedding',
           queryVector: inputEmbedding,
           numCandidates: 1000,
           limit: 500,
+          // Filter out results with a rating 'R'
+          filter: {
+            rating: {
+              $nin: [
+                "R - 17+ (violence & profanity)",
+                "R+ - Mild Nudity"
+                ],
+            }
+          }
         },
       },
       {
@@ -37,14 +46,6 @@ export async function search(search?: string, model?: string) {
           images: 1,
           image: '$images.jpg.large_image_url',
           rating: 1,
-        }
-      },
-      // Include search score
-      {
-        $match: {
-          rating: {
-            $not: /^R/i,
-          }
         }
       },
       {

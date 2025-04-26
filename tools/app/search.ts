@@ -38,18 +38,18 @@ export async function main(search?: string) {
           limit: 100,
         },
       },
-      // Include search score
-      {
-        $project: {
-          synopsis_embedding: 0,
-        },
-      },
+      // Filter out results with a rating 'R'
       {
         $match: {
           rating: {
             $not: /^R/i,
           }
         }
+      },
+      {
+        $project: {
+          synopsis_embedding: 0,
+        },
       },
     ]).toArray()
   //
