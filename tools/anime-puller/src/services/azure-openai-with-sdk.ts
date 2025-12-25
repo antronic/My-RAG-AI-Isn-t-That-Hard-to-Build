@@ -1,6 +1,7 @@
 import { AzureOpenAI } from 'openai'
 import dotenv from 'dotenv'
-import { ChatCompletionMessageParam } from 'openai/resources/chat'
+import { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
+// import { ChatCompletionMessageParam } from 'openai/resources/chat'
 
 dotenv.config()
 
