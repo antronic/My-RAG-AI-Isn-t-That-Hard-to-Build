@@ -92,6 +92,44 @@ Please recommend anime for this query: ${userQuery}`
   }
 }
 
+export const rewriteQueryForEmbedding = async (input: string): Promise<string> => {
+  const endpoint = `https://${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_COMPLETION_DEPLOYMENT_NAME}/chat/completions?api-version=2023-07-01-preview`
+
+  const messages = [
+    {
+      role: "system",
+      content: `Rewrite the user input into a concise, natural search query optimized for embedding-based semantic search in a vector database. Preserve the original intent and meaning. Do not add instructions, explanations, or formatting.`,
+    },
+    {
+      role: "user",
+      content: `Generate an optimized input for embedding from the following text: ${input}`
+    }
+  ]
+
+  try {
+    //
+    const response = await axios.post(
+      endpoint,
+      {
+        messages,
+        temperature: 0.1,
+        max_tokens: 1000,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': process.env.AZURE_OPENAI_API_KEY,
+        },
+      }
+    )
+
+    return response.data.choices[0].message.content
+  } catch (error: any) {
+    console.error('Error generating response:', error.status)
+    throw new Error('Failed to generate response')
+  }
+}
+
 // generateReponse('anime recommendations', '1. Attack on Titan\n2. My Hero Academia\n3. One Punch Man\n4. Naruto\n5. Dragon Ball Z')
 //   .next()
 //   .then(({ value }) => console.log('Value:', value))

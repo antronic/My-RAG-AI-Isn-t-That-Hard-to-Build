@@ -34,6 +34,10 @@ export const GeneratePage = () => {
     })
   }, [thinkMessage])
 
+  useEffect(() => {
+    document.title += ' | Generate'
+  }, [])
+
   const generateOllama = async () => {
     // Don't process empty prompts
     if (!prompt.trim()) return
