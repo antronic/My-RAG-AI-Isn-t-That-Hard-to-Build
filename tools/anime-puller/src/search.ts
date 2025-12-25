@@ -35,8 +35,8 @@ export async function search(search?: string, model?: string, options?: SearchOp
     .aggregate([
       {
         $vectorSearch: {
-          index: 'synopsis_rating_filter',
-          path: 'synopsis_embedding',
+          index: 'content_rating_filter',
+          path: 'content_embedding',
           queryVector: inputEmbedding,
           numCandidates: 1000,
           limit: 500,

@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { AI_PROVIDER } from '../const/llm'
 
@@ -39,6 +39,11 @@ function SearchPage() {
   const handleProviderChange = (newProvider: AI_PROVIDER) => {
     setProvider(newProvider)
   }
+
+
+  useEffect(() => {
+      document.title += ' | Search'
+    }, [])
 
   return (
     <>

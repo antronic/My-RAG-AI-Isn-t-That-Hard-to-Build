@@ -6,16 +6,17 @@ import { connectDB } from '../config/mongo'
 config()
 
 async function main() {
-
-
-
+  // Connect to MongoDB
   await connectDB()
+  // Define consumer ID
   const gId = process.argv[2] || 1
+  // Create Kafka consumer with the specified group ID
   const c = consumer(`${gId}`)
-
   console.log('Starting consumer id...', gId)
   await c.connect()
-  await EmbededSave.start(c)
+
+  // Start the embedding and saving task
+  await EmbededSave.start(c, Number(gId) as 1 | 2)
 
   process.on('SIGINT', async () => {
     console.log('🔴 Disconnecting consumer...');

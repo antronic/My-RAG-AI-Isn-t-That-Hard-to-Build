@@ -19,7 +19,7 @@ export async function start(page = 1) {
       release_year: anime.year,
       producers_name: anime.producers.map(producer => producer.name),
       producers: anime.producers,
-      themes: anime.themes.map(theme => theme.name)
+      themes: anime.themes.map(theme => theme.name),
     }
   })
 

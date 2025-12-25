@@ -12,6 +12,9 @@ async function main() {
 
   await connectDB()
 
+  console.log('Starting re-embedded consumer id...', gId)
+  console.log('KAFKA_TOPIC', KAFKA_TOPIC)
+
   await _consumer.subscribe({
     topic: KAFKA_TOPIC,
     fromBeginning: true,
@@ -21,12 +24,12 @@ async function main() {
     eachMessage: async ({ topic, partition, message }) => {
       const task = JSON.parse(message.value!.toString());
       console.log(`✅ Task Received:`, task._id);
-      console.log('topic', topic)
+      console.log('topic', topic, 'partition', partition)
 
-      const { _id, synopsis } = task
+      const { _id, ...data } = task
 
       console.log(`Updating ${_id}...`)
-      await updateData(_id, synopsis)
+      await updateData(_id, data)
     }
   })
 

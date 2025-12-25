@@ -4,7 +4,7 @@ import { normalizedSearchResult, search } from '../tools/anime-puller/src/search
 import cors from '@elysiajs/cors'
 import { chatStore } from '../tools/anime-puller/src/chat/store'
 import { generateReponse as generateReponseOllama } from '../tools/anime-puller/src/services/ollama'
-import { generateReponse as generateOpenAIReponse } from '../tools/anime-puller/src/services/azure-openai'
+import { generateReponse as generateOpenAIReponse, rewriteQueryForEmbedding } from '../tools/anime-puller/src/services/azure-openai'
 import { ChatMessage } from '../tools/anime-puller/src/chat/types'
 import { config } from 'dotenv'
 
@@ -36,8 +36,10 @@ const app = new Elysia()
           break;
       }
 
+      // Optimize the prompt for embedding search
+      const optimizedPrompt = await rewriteQueryForEmbedding(input)
       // Perform vector similarity search and return matches
-      const result = await search(input, model)
+      const result = await search(optimizedPrompt, model)
       return result
   })
   //
@@ -125,8 +127,13 @@ const app = new Elysia()
   .post('/generate_openai', async function *({ body }) {
     // Extract the prompt from the request body
     const prompt = body!.prompt as string
+
+    // Optimize the prompt for embedding search
+    const optimizedPrompt = await rewriteQueryForEmbedding(prompt)
+    console.log('Optimized prompt for embedding:', optimizedPrompt)
+
     // Perform a search based on the content
-    const searchResult = await search(prompt, 'azure-openai')
+    const searchResult = await search(optimizedPrompt, 'azure-openai')
     const normalizedSearchResults = searchResult ? normalizedSearchResult(searchResult) : 'No result'
 
     console.log('Prompt:', prompt)
