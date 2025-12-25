@@ -41,6 +41,10 @@ Due to the large size of the anime dataset, we will use Kafka as a message broke
 ![RAG AI - Data Loading Architecture](./assets/img/my-rag-data_loading-architect.jpg)
 
 1. Setup Kafka and MongoDB
+- (Sample) You can use Kafka Docker image to quickly setup a Kafka broker locally. Follow the command below:
+```bash
+docker run -d --name kafka-broker -p 9092:9092 apache/kafka:latest
+```
 2. Setup the environment variables in the `tools/anime-puller/.env` file.
 ```bash
 AZURE_OPENAI_ENDPOINT=""
