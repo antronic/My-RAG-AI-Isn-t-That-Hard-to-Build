@@ -4,7 +4,7 @@ import { ChatCompletionMessageParam } from 'openai/resources/chat'
 
 dotenv.config()
 
-const endpoint = process.env["AZURE_OPENAI_ENDPOINT_FULL"] || "https://jirachai-oai.openai.azure.com/";
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"]
 const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<REPLACE_WITH_YOUR_KEY_VALUE_HERE>";
 const apiVersion = "2025-01-01-preview";
 const deployment = "gpt-35-turbo"; // This must match your deployment name
@@ -13,6 +13,10 @@ const model = "gpt-35-turbo"; // This must match your deployment name
 // Response API vs Chat Completions
 // https://platform.openai.com/docs/guides/responses-vs-chat-completions
 export async function generateChatCompletion(searchResult: string, userQuery: string) {
+  if (!endpoint) {
+    throw new Error("AZURE_OPENAI_ENDPOINT is not defined in environment variables.");
+  }
+
   const client = new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
 
   const messages: ChatCompletionMessageParam[] = [
