@@ -23,6 +23,8 @@ export async function start(page = 1) {
     }
   })
 
+  let count = 1
+
   for (const anime of data) {
     await producer.send({
       topic: 'anime-task-topic',
@@ -34,6 +36,6 @@ export async function start(page = 1) {
       ]
     })
 
-    console.log('Sent')
+    console.log(`Sent - [${page}]:[${count++}/${data.length}] - ${anime.title}`)
   }
 }

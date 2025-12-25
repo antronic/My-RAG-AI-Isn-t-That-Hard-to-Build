@@ -27,5 +27,5 @@ async function main(start = 1, end = 28176) {
 }
 
 const start = parseInt(process.argv[2]) || 1
-const end = parseInt(process.argv[3]) || 28176
+const end = parseInt(process.argv[3]) || 1410
 main(start, end)
