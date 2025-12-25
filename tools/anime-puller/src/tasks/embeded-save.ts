@@ -2,6 +2,7 @@ import { Consumer } from 'kafkajs'
 
 import { db } from '../config/mongo'
 import { generateEmbedding, getCollectionName, getModelName } from '../services/llm'
+import { getEmbeddingContent } from '../config/prompt'
 
 const TEXT_EMBEDDING_AI = process.env.TEXT_EMBEDDING_AI
 
@@ -25,13 +26,15 @@ export async function start(consumer: Consumer, taskType: 1 | 2 = 1) {
 
       // Insert into MongoDB based on task type
       if (taskType === 1) {
-        let embeddedData = await generateEmbedding(JSON.stringify(synopsis))
+        let embeddedData = await generateEmbedding(
+          getEmbeddingContent(task)
+        )
         let modelName = getModelName()
 
         await db!.collection(getCollectionName())
         .insertOne({
           ...task,
-          synopsis_embedding: embeddedData,
+          content_embedding: embeddedData,
           model: modelName,
         })
       }
