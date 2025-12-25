@@ -21,7 +21,7 @@ async function connectDB() {
             maxPoolSize: 20, // Maximum connections in pool
             serverSelectionTimeoutMS: 5000, // Timeout for initial connection
             connectTimeoutMS: 10000, // Timeout for connection attempts
-            directConnection: true,
+            // directConnection: true,
         })
 
         await client.connect()
