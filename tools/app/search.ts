@@ -28,12 +28,12 @@ export async function main(search?: string) {
   console.log(inputEmbedding)
   //
   // Perform the vector search
-  const results = await db?.collection(getCollectionName())
+  const results = await db!.collection(getCollectionName())
     .aggregate([
       {
         $vectorSearch: {
-          index: 'synopsis_rating_filter',
-          path: 'synopsis_embedding',
+          index: 'content_rating_filter',
+          path: 'content_embedding',
           queryVector: inputEmbedding,
           numCandidates: 1000,
           limit: 500,
@@ -62,7 +62,7 @@ export async function main(search?: string) {
   if (logOption === 'full') {
     // Log the search results
     console.log(results)
-  } else if (logOption === 'summary') {
+  } else if (logOption === 'compact') {
     // Log the search results, only showing the title, rating, and URL
     console.log(results?.map(r => ({ title: r.title, rating: r.rating, url: r.url })))
   }

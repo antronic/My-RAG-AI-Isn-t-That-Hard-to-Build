@@ -13,7 +13,7 @@ interface EmbeddingResponse {
 }
 
 export async function generateEmbedding(text: string): Promise<EmbeddingResponse> {
-  console.log('Generating embedding for text:', text)
+  console.log('Generating embedding for text:', text, 'using Azure OpenAI')
   const endpoint = `https://${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME}/embeddings?api-version=2023-05-15`
   // console.log('Endpoint:', endpoint)
 

@@ -25,12 +25,23 @@ export async function generateEmbedding(text: string, textEmbeddingAi?: string):
   }
 }
 
+export function getModelName(textEmbeddingAi?: string): string {
+  switch (textEmbeddingAi || TEXT_EMBEDDING_AI) {
+    case 'azure-openai':
+      return 'azure_openai_gpt-ada-002'
+    case 'ollama':
+      return 'nomic-embed-text'
+    default:
+      throw new Error('Unsupported TEXT_COMPLETION_AI provider');
+  }
+}
+
 export function getCollectionName(textEmbeddingAi?: string): string {
   switch (textEmbeddingAi || TEXT_EMBEDDING_AI) {
     case 'azure-openai':
       return 'embedded_aoai_anime_list'
     case 'ollama':
-      return 'embedded_anime_list'
+      return 'embedded_nomic_anime_list'
     default:
       throw new Error('Unsupported TEXT_EMBEDDING_AI provider');
   }

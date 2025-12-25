@@ -1,9 +1,11 @@
 import { Consumer } from 'kafkajs'
-import { consumer } from '../config/kafka'
-import { connectDB, db } from '../config/mongo'
-import { generateEmbedding } from '../services/ollama'
 
-export async function start(consumer: Consumer) {
+import { db } from '../config/mongo'
+import { generateEmbedding, getCollectionName, getModelName } from '../services/llm'
+
+const TEXT_EMBEDDING_AI = process.env.TEXT_EMBEDDING_AI
+
+export async function start(consumer: Consumer, taskType: 1 | 2 = 1) {
   await consumer.subscribe({
     topic: 'anime-task-topic',
     fromBeginning: true,
@@ -18,13 +20,30 @@ export async function start(consumer: Consumer) {
       console.log('topic', topic)
 
       const { images, url, producers, synopsis  } = task
-      const embeddedData = await generateEmbedding(JSON.stringify(synopsis))
 
-      await db?.collection('embedded_aoia_anime_list')
+      const tasks: Promise<any>[] = []
+
+      // Insert into MongoDB based on task type
+      if (taskType === 1) {
+        let embeddedData = await generateEmbedding(JSON.stringify(synopsis))
+        let modelName = getModelName()
+
+        await db!.collection(getCollectionName())
         .insertOne({
           ...task,
-          synopsis_embedding: embeddedData.embedding,
-        }).catch(console.error)
+          synopsis_embedding: embeddedData,
+          model: modelName,
+        })
+      }
+
+      // For task type 2, save raw data without embedding
+      if (taskType === 2) {
+        await db!.collection('raw_anime_list')
+          .insertOne({
+            ...task,
+          })
+      }
+
 
       console.log('🍀 Write success')
     },
