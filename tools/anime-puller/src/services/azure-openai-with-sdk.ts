@@ -17,7 +17,7 @@ export async function generateChatCompletion(searchResult: string, userQuery: st
     throw new Error("AZURE_OPENAI_ENDPOINT is not defined in environment variables.");
   }
 
-  const client = new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
+  const client = new AzureOpenAI({ endpoint: `https://${endpoint}`, apiKey, apiVersion, deployment });
 
   const messages: ChatCompletionMessageParam[] = [
     {
