@@ -6,7 +6,7 @@ config()
 //
 // MongoDB connection pooling
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:56717'
-const DB_NAME = process.env.DB_NAME || 'my_gen_ai'
+const DB_NAME = process.env.MONGO_DB_NAME || 'my_gen_ai'
 
 
 let client: MongoClient | null = null
