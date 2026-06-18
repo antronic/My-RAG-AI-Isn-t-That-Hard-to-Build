@@ -28,6 +28,60 @@ This is the key difference from the [client-side demo](./demo-search.md):
 }
 ```
 
+## Components
+
+A high-level view of how data and search requests flow through the system. The
+embedding model lives **inside MongoDB Atlas** and is applied automatically on
+both ingest and search.
+
+```mermaid
+flowchart LR
+    Data["Data<br/>(anime dataset)"] --> App1["App"]
+    App1 -->|Ingest| Mongo["MongoDB Atlas"]
+    User["User"] --> App2["App"]
+    App2 -->|Search| Mongo
+    Mongo -.->|auto-embedding| Embed["Embedding model"]
+    Embed -.-> Mongo
+```
+
+## Ingest vs. query (the simple picture)
+
+With auto-embedding, **you never compute embeddings yourself** — not when
+storing data, and not when searching. You hand Atlas plain text both times.
+
+```mermaid
+flowchart LR
+    subgraph Ingest["Ingest data"]
+        I1["Raw document<br/>(plain text synopsis)"] -->|insert as-is| I2["raw_anime_list"]
+        I2 -.->|Atlas embeds automatically| I3["Stored vectors"]
+    end
+    subgraph Query["Query data"]
+        Q1["Raw query<br/>'cat'"] -->|search as-is| Q2["$vectorSearch query"]
+        Q2 -.->|Atlas embeds automatically| Q3["Ranked matches"]
+    end
+```
+
+- **Ingest:** insert the document with its plain-text field — no embedding step.
+- **Query:** pass the plain-text query — no embedding step.
+- Atlas handles both embeddings behind the scenes (dotted arrows).
+
+## How it works
+
+```mermaid
+flowchart LR
+    A["CLI: bun run<br/>demo_auto_embedded_search.ts 'cat'"] -->|raw text| B["$vectorSearch<br/>query: 'cat'"]
+    subgraph Atlas["MongoDB Atlas"]
+        B --> C["Embedding model<br/>(configured on the index)"]
+        C -->|query vector| D["autoembed_index_1<br/>on 'synopsis'"]
+        D --> E["Ranked matches<br/>from raw_anime_list"]
+    end
+    E -->|results| A
+```
+
+Atlas embeds the query text server-side using the model configured on the
+auto-embedding index, then matches it against the pre-embedded `synopsis`
+vectors — the client never computes an embedding.
+
 ## Prerequisites
 
 - An Atlas Vector Search **auto-embedding** index on the target collection.
