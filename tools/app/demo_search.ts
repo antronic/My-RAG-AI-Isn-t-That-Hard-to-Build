@@ -1,14 +1,15 @@
 import { config } from 'dotenv'
 import { client, connectDB, db } from '../anime-puller/src/config/mongo'
-import { generateEmbedding, getCollectionName } from '../anime-puller/src/services/llm'
+import { generateEmbedding, getCollectionName, getVectorIndex } from '../anime-puller/src/services/llm'
 //
 // Load environment variables
 config()
-// Connect to the MongoDB database
-connectDB()
 //
 // Main function
 export async function main(search?: string) {
+  //
+  // Connect to the MongoDB database (throws a clear error if it fails)
+  await connectDB()
   //
   // Get the search query from the command line arguments
   const input = search || process.argv[2]
@@ -24,16 +25,19 @@ export async function main(search?: string) {
   console.log('⚙️ Converting...', input)
   //
   // Generate the embedding for the search query
-  const inputEmbedding = await generateEmbedding(input)
+  const inputEmbedding = await generateEmbedding(input, process.env.TEXT_EMBEDDING_AI, 'query')
   console.log(inputEmbedding)
+  //
+  // Resolve the vector index name and path based on the configured embedding model
+  const vectorIndex = getVectorIndex()
   //
   // Perform the vector search
   const results = await db!.collection(getCollectionName())
     .aggregate([
       {
         $vectorSearch: {
-          index: 'content_rating_filter',
-          path: 'content_embedding',
+          index: vectorIndex.name,
+          path: vectorIndex.path,
           queryVector: inputEmbedding,
           numCandidates: 1000,
           limit: 500,
@@ -51,6 +55,7 @@ export async function main(search?: string) {
       },
       {
         $project: {
+          score: { $meta: 'vectorSearchScore' },
           synopsis_embedding: 0,
         },
       },
@@ -74,4 +79,7 @@ export async function main(search?: string) {
   return results
 }
 
-main()
+main().catch((error) => {
+  console.error('💥 Search failed:', (error as Error).message)
+  process.exit(1)
+})

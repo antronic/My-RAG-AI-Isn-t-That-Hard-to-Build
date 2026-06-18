@@ -1,6 +1,6 @@
 import { config } from 'dotenv'
 import { client, connectDB, db } from './config/mongo'
-import { generateEmbedding, getCollectionName } from './services/llm'
+import { generateEmbedding, getCollectionName, getVectorIndex } from './services/llm'
 
 config()
 
@@ -14,7 +14,7 @@ export async function search(search?: string, model?: string, options?: SearchOp
   const input = search || process.argv[2]
   console.log('Converting with model:', model, '...', input)
 
-  const inputEmbedding = await generateEmbedding(input, model)
+  const inputEmbedding = await generateEmbedding(input, model, 'query')
   console.log('Searching...', input)
 
   let filter = {}
@@ -31,12 +31,14 @@ export async function search(search?: string, model?: string, options?: SearchOp
     }
   }
 
+  const vectorIndex = getVectorIndex(model)
+
   const results = await db?.collection(getCollectionName(model))
     .aggregate([
       {
         $vectorSearch: {
-          index: 'content_rating_filter',
-          path: 'content_embedding',
+          index: vectorIndex.name,
+          path: vectorIndex.path,
           queryVector: inputEmbedding,
           numCandidates: 1000,
           limit: 500,

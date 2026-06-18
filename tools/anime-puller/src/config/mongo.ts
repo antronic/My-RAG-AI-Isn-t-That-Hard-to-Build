@@ -14,9 +14,12 @@ let db: Db | null = null
 
 async function connectDB() {
     console.log('🔌 Connecting to MongoDB...')
-    console.log(MONGO_URI)
+    // console.log(MONGO_URI)
+    if (!process.env.MONGO_URI) {
+        throw new Error('❌ MONGO_URI is not set. Please configure it in your .env file.')
+    }
     if (!client) {
-        client = new MongoClient(MONGO_URI, {
+        const newClient = new MongoClient(MONGO_URI, {
             minPoolSize: 5, // Minimum connections in pool
             maxPoolSize: 20, // Maximum connections in pool
             serverSelectionTimeoutMS: 5000, // Timeout for initial connection
@@ -24,9 +27,19 @@ async function connectDB() {
             // directConnection: true,
         })
 
-        await client.connect()
-        console.log('✅ 🍃 MongoDB connected with connection pooling')
-        db = client.db(DB_NAME)
+        try {
+            await newClient.connect()
+            console.log('✅ 🍃 MongoDB connected with connection pooling')
+            client = newClient
+            db = client.db(DB_NAME)
+        } catch (error) {
+            // Reset so a later call can retry instead of reusing a broken client
+            await newClient.close().catch(() => {})
+            client = null
+            db = null
+            console.error('❌ 🍃 Failed to connect to MongoDB:', (error as Error).message)
+            throw new Error(`Failed to connect to MongoDB: ${(error as Error).message}`)
+        }
     }
     return { client, db }
 }
