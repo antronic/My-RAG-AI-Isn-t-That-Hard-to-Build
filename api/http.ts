@@ -38,6 +38,7 @@ const app = new Elysia()
 
       // Optimize the prompt for embedding search
       const optimizedPrompt = await rewriteQueryForEmbedding(input)
+      console.log('Optimized prompt for embedding:', optimizedPrompt)
       // Perform vector similarity search and return matches
       const result = await search(optimizedPrompt, model)
       return result
