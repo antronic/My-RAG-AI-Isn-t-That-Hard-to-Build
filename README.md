@@ -2,6 +2,18 @@
 
 ![RAG AI](./assets/img/my-rag-logo.png)
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Overview architecture](#overview-architecture)
+- [Documentation](#documentation)
+- [Pre-requisites](#pre-requisites)
+- [Setup Project](#setup-project)
+  - [Download the anime dataset](#download-the-anime-dataset)
+  - [Create a MongoDB Vector Index](#create-a-mongodb-vector-index)
+- [Usage - Start the Application](#usage---start-the-application)
+
 ## Introduction
 Welcome to the RAG AI Anime Search application!
 
@@ -14,6 +26,14 @@ Whether you’re looking for similar anime, exploring new titles, or simply curi
 
 ## Overview architecture
 ![Architecture](./assets/img/my-rag-architecture.png)
+
+## Documentation
+
+Detailed guides live in the [`docs/`](./docs) folder:
+
+- [Running the Project](./docs/running-the-project.md) — prerequisites, environment setup, loading the dataset, creating the vector index, and starting the API + UI.
+- [Demo: Vector Search (client-side embedding)](./docs/demo-search.md) — test `tools/app/demo_search.ts`, where the query embedding is generated client-side and passed as a `queryVector`.
+- [Demo: Auto-Embedded Search (server-side embedding)](./docs/demo-auto-embedded-search.md) — test `tools/app/demo_auto_embedded_search.ts`, where Atlas embeds the raw `query` text for you.
 
 ## Pre-requisites
 - [Bun](https://bun.sh/)
